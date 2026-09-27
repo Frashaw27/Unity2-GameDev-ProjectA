@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     //Variables for collision
     protected bool isGrounded = false;
     protected int health = 100;
+    public GameObject gun;
     protected int iFrames = 0;
 
     // Start is called before the first frame update
@@ -45,6 +46,9 @@ public class PlayerMovement : MonoBehaviour
     void collisionLogic(Collision2D collision){
         if (collision.gameObject.CompareTag("Ground")){
             isGrounded = true;
+            PlayerShooting reload = gun.GetComponent<PlayerShooting>();
+            reload.resetAmmo();
+            //Debug.Log(reload.ammo);
             //if (!isDashing && !GameManager.Instance.playerDead && iFrames == 0) takeDamage();
            // if (GameManager.Instance.playerDead) collision.gameObject.GetComponent<ZombieBehavior>().obsession = null;
         }
