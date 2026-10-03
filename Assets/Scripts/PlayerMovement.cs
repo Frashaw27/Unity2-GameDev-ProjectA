@@ -25,6 +25,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void Update(){
+        if (GameManager.Instance.isPaused) return;
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         float vert = 0;
         if (Input.GetButtonDown("Jump") && isGrounded){
@@ -33,10 +34,15 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = false;
             //AudioManager.Instance.PlaySoundEffect(AudioManager.Instance.jumpSound);
         }
+        if (Input.GetButtonDown("Escape")){
+            GameManager.Instance.Pause();
+            GameManager.Instance.pauseMenu.SetActive(true);
+        }
     }
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (GameManager.Instance.isPaused) return;
         float horz = Input.GetAxisRaw("Horizontal");
         int sprintMod = 1;
         //if (Input.GetButtonDown("Sprint")) Debug.Log("bb");//sprintMod = 2;
@@ -51,6 +57,12 @@ public class PlayerMovement : MonoBehaviour
             //Debug.Log(reload.ammo);
             //if (!isDashing && !GameManager.Instance.playerDead && iFrames == 0) takeDamage();
            // if (GameManager.Instance.playerDead) collision.gameObject.GetComponent<ZombieBehavior>().obsession = null;
+        } else if (collision.gameObject.CompareTag("Win")){
+            collision.gameObject.SetActive(false);
+            GameManager.Instance.Pause();
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            rb.bodyType = RigidbodyType2D.Static;
+            //Debug.Log(GameManager.Instance.isPaused);
         }
     }
 

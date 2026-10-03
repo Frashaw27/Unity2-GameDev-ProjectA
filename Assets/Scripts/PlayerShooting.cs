@@ -11,6 +11,9 @@ public class PlayerShooting : MonoBehaviour
     //Tracks where the mouse is located
     public int maxAmmo;
     public int ammo;
+    public GameObject pistol;
+    public GameObject shotgun;
+    public GameObject uzi;
     public Vector3 mouseLocation;
     //Gets the place where the bullets are spawning from
     public Transform firePoint;
@@ -43,6 +46,7 @@ public class PlayerShooting : MonoBehaviour
 
     void Update()
     {
+        if (GameManager.Instance.isPaused) return;
         mouseLocation = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         Vector2 aimDirect = new Vector2(mouseLocation.x, mouseLocation.y) - rb.position;
@@ -56,6 +60,21 @@ public class PlayerShooting : MonoBehaviour
             rb2.velocity += -aimDirect * bullet.GetComponent<GunBehavior>().recoilForce;
             ammo--;
             shotDelay = bullet.GetComponent<GunBehavior>().shotDelay;
+        }
+        if (Input.GetButtonDown("GunSwitch")){
+            if (bullet == pistol){
+                pistol.SetActive(false);    
+                shotgun.SetActive(true);
+                bullet = shotgun;   
+            } else if (bullet == shotgun){
+                shotgun.SetActive(false);    
+                uzi.SetActive(true);
+                bullet = uzi;    
+            } else if (bullet == uzi){
+                uzi.SetActive(false);    
+                pistol.SetActive(true);
+                bullet = pistol;    
+            }
         }
     }
 
